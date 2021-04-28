@@ -154,10 +154,10 @@ class RegisterViewController: UIViewController {
         )
     }
     
-    private func showAlertUserSignUpError() {
+    private func showAlertUserSignUpError(message: String = "Please check all of information to create new account.") {
         let alert = UIAlertController(
             title: "Ooops",
-            message: "Please check your input again.",
+            message: message,
             preferredStyle: .alert)
         alert.addAction(UIAlertAction(
                             title: "Dismiss",
@@ -235,17 +235,25 @@ class RegisterViewController: UIViewController {
         
         // Firebase Log in
         
-        FirebaseAuth.Auth.auth().createUser(
-            withEmail: email,
+        AuthManager.shared.createUser(
+            with: firstName,
+            lastName: lastName,
+            email: email,
             password: password
-        ) { result, error in
-            guard let result = result, error == nil else {
-                print("error creating user")
+        ) { [weak self] result in
+            
+            guard let strongSelf = self else {
                 return
             }
             
-            let user = result.user
-            print("Created User: \(user)")
+            switch result {
+            case .success:
+                print("\n successfully created user")
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            case .failure(let error):
+                print("Error creating user: \n\(error.localizedDescription)")
+                strongSelf.showAlertUserSignUpError(message: "Seems like this email address is already exist. Please try with different email address")
+            }
         }
     }
 }

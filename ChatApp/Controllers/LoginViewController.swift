@@ -147,15 +147,20 @@ class LoginViewController: UIViewController {
         }
         
         // Firebase sign in
-        Auth.auth().signIn(
-            withEmail: email,
-            password: password) { result, error in
-            guard let result = result, error == nil else {
-                print("Error signing in")
+        AuthManager.shared.signIn(with: email, password: password) { [weak self] result in
+            guard let strongSelf = self else {
                 return
             }
             
-            let user = result.user
+            switch result {
+            case .failure(let error):
+                print("\nError with Signing in \(error.localizedDescription)")
+                
+            case .success(let user):
+                print("successfully logged in with the \(user)\n")
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            }
+            
         }
     }
     

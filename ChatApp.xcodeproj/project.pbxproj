@@ -23,6 +23,9 @@
 		97A0561426393E22006BEE11 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561326393E22006BEE11 /* AuthTextField.swift */; };
 		97A05616263941A1006BEE11 /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A05615263941A1006BEE11 /* AuthButton.swift */; };
 		97A056182639FC0D006BEE11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 97A056172639FC0D006BEE11 /* GoogleService-Info.plist */; };
+		97A0561B2639FFCC006BEE11 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561A2639FFCC006BEE11 /* AuthManager.swift */; };
+		97A0561D263A05C7006BEE11 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561C263A05C7006BEE11 /* DatabaseManager.swift */; };
+		97A0561F263A0832006BEE11 /* ChatAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561E263A0832006BEE11 /* ChatAppUser.swift */; };
 		D247C85C6A0C353D0B43A9B4 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E673879123AAD0F4E619411 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +50,9 @@
 		97A0561326393E22006BEE11 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 		97A05615263941A1006BEE11 /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
 		97A056172639FC0D006BEE11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		97A0561A2639FFCC006BEE11 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		97A0561C263A05C7006BEE11 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		97A0561E263A0832006BEE11 /* ChatAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAppUser.swift; sourceTree = "<group>"; };
 		A780B6564585585EAE49E9B7 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				97A056032639343D006BEE11 /* Resources */,
+				97A056192639FFB0006BEE11 /* Managers */,
 				97A0560226393438006BEE11 /* ViewModels */,
 				97A0560126393433006BEE11 /* Models */,
 				97A056002639342E006BEE11 /* Views */,
@@ -120,6 +127,7 @@
 		97A0560126393433006BEE11 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				97A0561E263A0832006BEE11 /* ChatAppUser.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -150,6 +158,15 @@
 				97A055F626393213006BEE11 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		97A056192639FFB0006BEE11 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				97A0561A2639FFCC006BEE11 /* AuthManager.swift */,
+				97A0561C263A05C7006BEE11 /* DatabaseManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		D8AD31ABB5690F095047A0BB /* Pods */ = {
@@ -287,11 +304,14 @@
 				97A05606263934D1006BEE11 /* LoginViewController.swift in Sources */,
 				97A05616263941A1006BEE11 /* AuthButton.swift in Sources */,
 				97A05608263934D8006BEE11 /* RegisterViewController.swift in Sources */,
+				97A0561B2639FFCC006BEE11 /* AuthManager.swift in Sources */,
 				97A0560E263934FE006BEE11 /* NewConversationViewController.swift in Sources */,
 				97A055F026393212006BEE11 /* ConversationsViewController.swift in Sources */,
+				97A0561D263A05C7006BEE11 /* DatabaseManager.swift in Sources */,
 				97A0560C263934F6006BEE11 /* VideoPlayerViewController.swift in Sources */,
 				97A0561226393C7C006BEE11 /* Extensions.swift in Sources */,
 				97A055EC26393212006BEE11 /* AppDelegate.swift in Sources */,
+				97A0561F263A0832006BEE11 /* ChatAppUser.swift in Sources */,
 				97A0561026393508006BEE11 /* ProfileViewController.swift in Sources */,
 				97A055EE26393212006BEE11 /* SceneDelegate.swift in Sources */,
 				97A0560A263934EF006BEE11 /* PhotoViewerViewController.swift in Sources */,
