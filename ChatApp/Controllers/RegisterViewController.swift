@@ -71,6 +71,7 @@ class RegisterViewController: UIViewController {
             width: imageSize,
             height: imageSize
         )
+        imageView.layer.cornerRadius = imageSize/2
         imageView.layer.zPosition = -1
         
         let buttonSize: CGFloat = 30
@@ -80,8 +81,6 @@ class RegisterViewController: UIViewController {
             width: buttonSize,
             height: buttonSize
         )
-        
-        
         
         firstNameField.frame = CGRect(
             x: 20,
@@ -172,18 +171,43 @@ class RegisterViewController: UIViewController {
             title: "Profile Picture", message: "How do you want to pick your picture?", preferredStyle: .actionSheet)
         actionSheets.addAction(UIAlertAction(
                                 title: "Cancel",
-                                style: .destructive,
+                                style: .cancel,
                                 handler: nil))
         actionSheets.addAction(UIAlertAction(
                                 title: "Choose From Photo Library",
                                 style: .default,
-                                handler: { _ in
-                                    
+                                handler: { [weak self] _ in
+                                    DispatchQueue.main.async {
+                                        self?.presentPhotoPicker()
+                                    }
                                 }))
         actionSheets.addAction(UIAlertAction(
                                 title: "Take a Photo",
                                 style: .default,
-                                handler: nil))
+                                handler: { [weak self] _ in
+                                    DispatchQueue.main.async {
+                                        self?.presentCamera()
+                                    }
+                                }))
+        
+        present(actionSheets, animated: true, completion: nil)
+    }
+    
+    private func presentPhotoPicker() {
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    private func presentCamera() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+        
     }
     
     @objc private func didTapSignIn() {
@@ -229,5 +253,21 @@ extension RegisterViewController: UITextFieldDelegate {
             didTapSignUp()
         }
         return true
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+
+extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        
+        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return
+        }
+        imageView.image = image
     }
 }
