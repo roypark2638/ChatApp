@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -31,6 +32,8 @@ class LoginViewController: UIViewController {
     
     private let signUpButton = AuthButton(type: .signUp, title: nil)
 
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Sign In"
@@ -82,6 +85,8 @@ class LoginViewController: UIViewController {
         )
     }
     
+    // MARK: - Methods
+    
     private func addSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
@@ -124,7 +129,8 @@ class LoginViewController: UIViewController {
                             handler: nil))
         present(alert, animated: true)
     }
-
+    
+    // MARK: - Objc
     
     @objc private func didTapSignIn() {
         emailField.resignFirstResponder()
@@ -139,6 +145,18 @@ class LoginViewController: UIViewController {
             showAlertUserLoginError()
             return
         }
+        
+        // Firebase sign in
+        Auth.auth().signIn(
+            withEmail: email,
+            password: password) { result, error in
+            guard let result = result, error == nil else {
+                print("Error signing in")
+                return
+            }
+            
+            let user = result.user
+        }
     }
     
     @objc private func didTapSignUp() {
@@ -147,6 +165,8 @@ class LoginViewController: UIViewController {
 
     }
 }
+
+// MARK: - UITextFieldDelegate
 
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

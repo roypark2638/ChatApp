@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
 
@@ -210,7 +211,12 @@ class RegisterViewController: UIViewController {
         
     }
     
-    @objc private func didTapSignIn() {
+    @objc private func didTapSignUp() {
+        firstNameField.resignFirstResponder()
+        lastNameField.resignFirstResponder()
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        
         guard let email = emailField.text,
               !email.trimmingCharacters(in: .whitespaces).isEmpty,
               let firstName = firstNameField.text,
@@ -226,13 +232,21 @@ class RegisterViewController: UIViewController {
             showAlertUserSignUpError()
             return
         }
-    }
-    
-    @objc private func didTapSignUp() {
-        firstNameField.resignFirstResponder()
-        lastNameField.resignFirstResponder()
-        emailField.resignFirstResponder()
-        passwordField.resignFirstResponder()
+        
+        // Firebase Log in
+        
+        FirebaseAuth.Auth.auth().createUser(
+            withEmail: email,
+            password: password
+        ) { result, error in
+            guard let result = result, error == nil else {
+                print("error creating user")
+                return
+            }
+            
+            let user = result.user
+            print("Created User: \(user)")
+        }
     }
 }
 
