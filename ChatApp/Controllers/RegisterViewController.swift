@@ -17,20 +17,32 @@ class RegisterViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "AppLogo")
         imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "Profile")
         imageView.clipsToBounds = true
         return imageView
     }()
     
+    private let plusButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "PlusButton"), for: .normal)
+        button.imageView?.clipsToBounds = true
+        button.imageView?.contentMode = .scaleAspectFit
+        return button
+    }()
+    
     private let emailField = AuthTextField(type: .email, title: nil)
     
-    private let usernameField = AuthTextField(type: .email, title: "username")
+    private let firstNameField = AuthTextField(type: .plain, title: "First Name")
+    
+    private let lastNameField = AuthTextField(type: .plain, title: "Last Name")
     
     private let passwordField = AuthTextField(type: .password, title: nil)
     
     private let signUpButton = AuthButton(type: .signUp, title: nil)
 
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Create Account"
@@ -40,37 +52,61 @@ class RegisterViewController: UIViewController {
         addButtonActions()
         emailField.delegate = self
         passwordField.delegate = self
-        usernameField.delegate = self
+        firstNameField.delegate = self
+        lastNameField.delegate = self
+        
+        let tap = UITapGestureRecognizer(target: self,
+                                         action: #selector(didTapImageView))
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tap)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         scrollView.frame = view.bounds
-        let imageSize = view.width/3
+        let imageSize = view.width/3.5
         imageView.frame = CGRect(
             x: (view.width-imageSize)/2,
-            y: view.safeAreaInsets.top,
+            y: view.top + 20,
             width: imageSize,
             height: imageSize
         )
+        imageView.layer.zPosition = -1
         
-        usernameField.frame = CGRect(
+        let buttonSize: CGFloat = 30
+        plusButton.frame = CGRect(
+            x: imageView.right - buttonSize + 4,
+            y: imageView.bottom - buttonSize + 4,
+            width: buttonSize,
+            height: buttonSize
+        )
+        
+        
+        
+        firstNameField.frame = CGRect(
             x: 20,
             y: imageView.bottom + 10,
             width: view.width - 40,
             height: 50
         )
         
+        lastNameField.frame = CGRect(
+            x: 20,
+            y: firstNameField.bottom + 10,
+            width: view.width - 40,
+            height: 50
+        )
+        
         emailField.frame = CGRect(
             x: 20,
-            y: usernameField.bottom + 16,
+            y: lastNameField.bottom + 10,
             width: view.width - 40,
             height: 50
         )
         
         passwordField.frame = CGRect(
             x: 20,
-            y: emailField.bottom + 16,
+            y: emailField.bottom + 10,
             width: view.width-40,
             height: 50
         )
@@ -85,24 +121,35 @@ class RegisterViewController: UIViewController {
 
     }
     
+    // MARK: - Methods
+    
     private func addSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         scrollView.addSubview(emailField)
-        scrollView.addSubview(usernameField)
+        scrollView.addSubview(firstNameField)
+        scrollView.addSubview(lastNameField)
         scrollView.addSubview(passwordField)
         scrollView.addSubview(signUpButton)
+        scrollView.addSubview(plusButton)
     }
     
 
     private func configureNavigationBar() {
         navigationController?.navigationBar.tintColor = .label
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     private func addButtonActions() {
         signUpButton.addTarget(
             self,
             action: #selector(didTapSignUp),
+            for: .touchUpInside
+        )
+        
+        plusButton.addTarget(
+            self,
+            action: #selector(didTapImageView),
             for: .touchUpInside
         )
     }
@@ -119,12 +166,35 @@ class RegisterViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    @objc private func didTapImageView() {
+        print("Image tapped")
+        let actionSheets = UIAlertController(
+            title: "Profile Picture", message: "How do you want to pick your picture?", preferredStyle: .actionSheet)
+        actionSheets.addAction(UIAlertAction(
+                                title: "Cancel",
+                                style: .destructive,
+                                handler: nil))
+        actionSheets.addAction(UIAlertAction(
+                                title: "Choose From Photo Library",
+                                style: .default,
+                                handler: { _ in
+                                    
+                                }))
+        actionSheets.addAction(UIAlertAction(
+                                title: "Take a Photo",
+                                style: .default,
+                                handler: nil))
+    }
+    
     @objc private func didTapSignIn() {
         guard let email = emailField.text,
               !email.trimmingCharacters(in: .whitespaces).isEmpty,
-              let username = usernameField.text,
-              !username.trimmingCharacters(in: .whitespaces).isEmpty,
-              username.count >= 2,
+              let firstName = firstNameField.text,
+              !firstName.trimmingCharacters(in: .whitespaces).isEmpty,
+              firstName.count >= 2,
+              let lastName = lastNameField.text,
+              !lastName.trimmingCharacters(in: .whitespaces).isEmpty,
+              lastName.count >= 2,
               let password = passwordField.text,
               !password.trimmingCharacters(in: .whitespaces).isEmpty,
               password.count >= 6
@@ -135,15 +205,21 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func didTapSignUp() {
-        usernameField.resignFirstResponder()
+        firstNameField.resignFirstResponder()
+        lastNameField.resignFirstResponder()
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
     }
 }
 
+// MARK: - UITextFieldDelegate
+
 extension RegisterViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == usernameField {
+        if textField == firstNameField {
+            lastNameField.becomeFirstResponder()
+        }
+        else if textField == lastNameField {
             emailField.becomeFirstResponder()
         }
         else if textField == emailField {

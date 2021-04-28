@@ -33,7 +33,7 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Log In"
+        title = "Sign In"
         view.backgroundColor = .systemBackground
         configureNavigationBar()
         addSubviews()
@@ -48,7 +48,7 @@ class LoginViewController: UIViewController {
         let imageSize = view.width/3
         imageView.frame = CGRect(
             x: (view.width-imageSize)/2,
-            y: view.safeAreaInsets.top,
+            y: view.top,
             width: imageSize,
             height: imageSize
         )
@@ -95,6 +95,8 @@ class LoginViewController: UIViewController {
     private func configureNavigationBar() {
 
         navigationController?.navigationBar.tintColor = .label
+        navigationController?.navigationBar.prefersLargeTitles = true
+
     }
 
     private func addButtonActions() {
