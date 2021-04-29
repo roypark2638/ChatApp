@@ -24,13 +24,16 @@ extension DatabaseManager {
         case emailExistInDatabase
     }
     
+
+
+    
     /// Check if you can create the new user with
     /// - Parameters:
     ///   - email: present String
     ///   - completion: callback function return Bool
     public func canCreateNewUser(
         with email: String,
-        completion: @escaping (Result<Bool, Error>) -> Void
+        completion: @escaping (Result<String, Error>) -> Void
     ) {
         var safeEmail = email.replacingOccurrences(of: ".", with: "-")
         safeEmail = safeEmail.replacingOccurrences(of: "$", with: "-")
@@ -43,7 +46,7 @@ extension DatabaseManager {
             }
             
             // there is no same email address, so you can create
-            completion(.success(true))
+            completion(.success(email))
         }
 //        database.child("email").observeSingleEvent(of: .value) { snapshot in
 //            guard snapshot.value as? String == nil else {
@@ -56,14 +59,20 @@ extension DatabaseManager {
 //            completion(.success(true))
 //        }
     }
+
     
     /// Insert new user to the database
     /// - Parameter user: ChatAppUser
-    public func insertUser(with user: ChatAppUser) {
+    public func insertUser(
+        with user: ChatAppUser,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
             "last_name": user.lastName
         ])
+        print("Inserted the user into firebase successfully")
+        completion(.success(user.email))
     }
 }
 

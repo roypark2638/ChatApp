@@ -211,13 +211,8 @@ class RegisterViewController: UIViewController {
         
     }
     
-    @objc private func didTapSignUp() {
-        firstNameField.resignFirstResponder()
-        lastNameField.resignFirstResponder()
-        emailField.resignFirstResponder()
-        passwordField.resignFirstResponder()
-        
-        guard let email = emailField.text,
+    private func validateUserInputFields() -> (String, String, String, String)? {
+        if let email = emailField.text,
               !email.trimmingCharacters(in: .whitespaces).isEmpty,
               let firstName = firstNameField.text,
               !firstName.trimmingCharacters(in: .whitespaces).isEmpty,
@@ -227,32 +222,49 @@ class RegisterViewController: UIViewController {
               lastName.count >= 2,
               let password = passwordField.text,
               !password.trimmingCharacters(in: .whitespaces).isEmpty,
-              password.count >= 6
+              password.count >= 6 {
+            return (email, firstName, lastName, password)
+        }
         else {
             showAlertUserSignUpError()
+            return nil
+        }
+    }
+    
+    private func resignTextFields() {
+        firstNameField.resignFirstResponder()
+        lastNameField.resignFirstResponder()
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+    }
+    
+    @objc private func didTapSignUp() {
+        resignTextFields()
+        guard let (email, firstName, lastName, password) = validateUserInputFields() else {
             return
         }
         
-        // Firebase Log in
+        // Firebase register and log in
         
-        AuthManager.shared.createUser(
+        AuthManager.shared.signUp(
             with: firstName,
             lastName: lastName,
             email: email,
             password: password
         ) { [weak self] result in
-            
-            guard let strongSelf = self else {
-                return
-            }
-            
-            switch result {
-            case .success:
-                print("\n successfully created user")
-                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
-            case .failure(let error):
-                print("Error creating user: \n\(error.localizedDescription)")
-                strongSelf.showAlertUserSignUpError(message: "Seems like this email address is already exist. Please try with different email address")
+            DispatchQueue.main.async {
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                switch result {
+                case .success:
+                    print("\n successfully created user!!!!\n\n")
+                    strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                case .failure(let error):
+                    print("Error creating user: \n\(error.localizedDescription)")
+                    strongSelf.showAlertUserSignUpError(message: "Seems like this email address is already exist. Please try with different email address")
+                }
             }
         }
     }

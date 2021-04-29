@@ -27,42 +27,44 @@ final class AuthManager {
         return auth.currentUser != nil
     }
     
-    public func createUser(
+    public func signUp(
         with firstName: String,
         lastName: String,
         email: String,
         password: String,
-        completion: @escaping (Result<Bool, Error>) -> Void
+        completion: @escaping (Result<String, Error>) -> Void
     ) {
         DatabaseManager.shared.canCreateNewUser(with: email) { [weak self] result in
-            switch result {
-            case .success:
-                self?.auth.createUser(
-                    withEmail: email, password: password) { result, error in
-                    guard result != nil, error == nil else {
-                        if error != nil {
-                            completion(.failure(error!))
-                        }
-                        else {
-                            completion(.failure(AuthError.creatingUserError))
-                        }
-                        
-                        return
+            self?.auth.createUser(
+                withEmail: email,
+                password: password) { result, error in
+                
+                guard result != nil, error == nil else {
+                    if error != nil {
+                        print("\nfailed to create user. seems like same email address is already taken \(error!.localizedDescription)\n")
+                        completion(.failure(error!))
+                    }
+                    else {
+                        completion(.failure(AuthError.creatingUserError))
                     }
                     
-                    DatabaseManager.shared.insertUser(with: ChatAppUser(
-                                                        firstName: firstName,
-                                                        lastName: lastName,
-                                                        email: email))
-
-                    
+                    return
                 }
-            case .failure(let error):
-            print("\nfailed to create user. \(error)\n")
-                    
+                print("you can create with this user info")
+                
+                DatabaseManager.shared.insertUser(with: ChatAppUser(
+                                                    firstName: firstName,
+                                                    lastName: lastName,
+                                                    email: email), completion: completion)
+                
             }
+            
+            
+            
         }
     }
+    
+    
     
     public func signIn(
         with email: String,
