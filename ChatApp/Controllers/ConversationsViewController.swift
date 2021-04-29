@@ -27,7 +27,7 @@ class ConversationsViewController: UIViewController {
     private func validateAuth() {
         if !AuthManager.shared.isSignedIn() {
             print("\n\nuser is currently signed in")
-            let vc = LoginViewController()
+            let vc = SignInViewController()
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: false)
