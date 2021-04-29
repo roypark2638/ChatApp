@@ -16,7 +16,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = ConversationsViewController()
+        
+        if AuthManager.shared.isSignedIn() {
+            // show home
+            window.rootViewController = TabBarViewController()
+        }
+        else {
+            // show log in
+            let vc = SignInViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            window.rootViewController = nav
+        }
+        
         window.makeKeyAndVisible()
         
         self.window = window

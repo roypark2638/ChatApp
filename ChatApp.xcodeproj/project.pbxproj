@@ -13,7 +13,7 @@
 		97A055F326393212006BEE11 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97A055F126393212006BEE11 /* Main.storyboard */; };
 		97A055F526393213006BEE11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97A055F426393213006BEE11 /* Assets.xcassets */; };
 		97A055F826393213006BEE11 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97A055F626393213006BEE11 /* LaunchScreen.storyboard */; };
-		97A05606263934D1006BEE11 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A05605263934D1006BEE11 /* LoginViewController.swift */; };
+		97A05606263934D1006BEE11 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A05605263934D1006BEE11 /* SignInViewController.swift */; };
 		97A05608263934D8006BEE11 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A05607263934D8006BEE11 /* RegisterViewController.swift */; };
 		97A0560A263934EF006BEE11 /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A05609263934EF006BEE11 /* PhotoViewerViewController.swift */; };
 		97A0560C263934F6006BEE11 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0560B263934F6006BEE11 /* VideoPlayerViewController.swift */; };
@@ -26,6 +26,7 @@
 		97A0561B2639FFCC006BEE11 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561A2639FFCC006BEE11 /* AuthManager.swift */; };
 		97A0561D263A05C7006BEE11 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561C263A05C7006BEE11 /* DatabaseManager.swift */; };
 		97A0561F263A0832006BEE11 /* ChatAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561E263A0832006BEE11 /* ChatAppUser.swift */; };
+		97A05623263AA8BE006BEE11 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A05622263AA8BE006BEE11 /* TabBarViewController.swift */; };
 		D247C85C6A0C353D0B43A9B4 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E673879123AAD0F4E619411 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,7 +41,7 @@
 		97A055F426393213006BEE11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97A055F726393213006BEE11 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97A055F926393213006BEE11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		97A05605263934D1006BEE11 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		97A05605263934D1006BEE11 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		97A05607263934D8006BEE11 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		97A05609263934EF006BEE11 /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
 		97A0560B263934F6006BEE11 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		97A0561A2639FFCC006BEE11 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		97A0561C263A05C7006BEE11 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		97A0561E263A0832006BEE11 /* ChatAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAppUser.swift; sourceTree = "<group>"; };
+		97A05622263AA8BE006BEE11 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		A780B6564585585EAE49E9B7 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,12 +106,13 @@
 			isa = PBXGroup;
 			children = (
 				97A055EF26393212006BEE11 /* ConversationsViewController.swift */,
-				97A05605263934D1006BEE11 /* LoginViewController.swift */,
+				97A05605263934D1006BEE11 /* SignInViewController.swift */,
 				97A05607263934D8006BEE11 /* RegisterViewController.swift */,
 				97A05609263934EF006BEE11 /* PhotoViewerViewController.swift */,
 				97A0560B263934F6006BEE11 /* VideoPlayerViewController.swift */,
 				97A0560D263934FE006BEE11 /* NewConversationViewController.swift */,
 				97A0560F26393508006BEE11 /* ProfileViewController.swift */,
+				97A05622263AA8BE006BEE11 /* TabBarViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -301,7 +304,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97A05606263934D1006BEE11 /* LoginViewController.swift in Sources */,
+				97A05623263AA8BE006BEE11 /* TabBarViewController.swift in Sources */,
+				97A05606263934D1006BEE11 /* SignInViewController.swift in Sources */,
 				97A05616263941A1006BEE11 /* AuthButton.swift in Sources */,
 				97A05608263934D8006BEE11 /* RegisterViewController.swift in Sources */,
 				97A0561B2639FFCC006BEE11 /* AuthManager.swift in Sources */,
