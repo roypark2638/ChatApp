@@ -159,6 +159,10 @@ class SignInViewController: UIViewController {
             case .success(let user):
                 print("successfully logged in with the \(user)\n")
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                
+                let vc = TabBarViewController()
+                vc.modalPresentationStyle = .fullScreen
+                strongSelf.present(vc, animated: true, completion: nil)
             }
             
         }

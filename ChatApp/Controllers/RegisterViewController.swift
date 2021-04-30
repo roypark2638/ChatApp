@@ -260,7 +260,8 @@ class RegisterViewController: UIViewController {
                 switch result {
                 case .success:
                     print("\n successfully created user!!!!\n\n")
-                    strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                    strongSelf.dismiss(animated: true, completion: nil)
+                    
                 case .failure(let error):
                     print("Error creating user: \n\(error.localizedDescription)")
                     strongSelf.showAlertUserSignUpError(message: "Seems like this email address is already exist. Please try with different email address")
