@@ -12,6 +12,7 @@ class ConversationsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Chats"
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .label
         
