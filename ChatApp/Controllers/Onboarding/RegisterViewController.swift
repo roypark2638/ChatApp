@@ -7,8 +7,11 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
 
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -245,6 +248,7 @@ class RegisterViewController: UIViewController {
         }
         
         // Firebase register and log in
+        spinner.show(in: scrollView)
         
         AuthManager.shared.signUp(
             with: firstName,
@@ -256,6 +260,8 @@ class RegisterViewController: UIViewController {
                 guard let strongSelf = self else {
                     return
                 }
+                
+                strongSelf.spinner.dismiss()
                 
                 switch result {
                 case .success:

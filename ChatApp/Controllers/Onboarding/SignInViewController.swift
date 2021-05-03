@@ -9,8 +9,11 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
+import JGProgressHUD
 
 class SignInViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -196,25 +199,31 @@ class SignInViewController: UIViewController {
             return
         }
         
+        spinner.show(in: view)
+        
         // Firebase sign in
         AuthManager.shared.signIn(with: email, password: password) { [weak self] result in
             guard let strongSelf = self else {
                 return
             }
             
-            switch result {
-            case .failure(let error):
-                print("\nError with Signing in \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                strongSelf.spinner.dismiss()
                 
-            case .success(let user):
-                print("successfully logged in with the \(user)\n")
-                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                switch result {
+                case .failure(let error):
+                    print("\nError with Signing in \(error.localizedDescription)")
+                    
+                case .success(let user):
+                    print("successfully logged in with the \(user)\n")
+                    strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                    
+                    let vc = TabBarViewController()
+                    vc.modalPresentationStyle = .fullScreen
+                    strongSelf.present(vc, animated: true, completion: nil)
+                }
                 
-                let vc = TabBarViewController()
-                vc.modalPresentationStyle = .fullScreen
-                strongSelf.present(vc, animated: true, completion: nil)
             }
-            
         }
     }
     
