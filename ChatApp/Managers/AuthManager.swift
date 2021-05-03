@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import FBSDKLoginKit
 
 final class AuthManager {
     static let shared = AuthManager()
@@ -110,6 +111,9 @@ final class AuthManager {
     
     
     public func signOut() {
+        // Log Out FB
+        FBSDKLoginKit.LoginManager().logOut()
+        
         do {
             try auth.signOut()
         }
