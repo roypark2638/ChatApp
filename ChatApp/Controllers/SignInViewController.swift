@@ -341,7 +341,7 @@ extension SignInViewController: GIDSignInDelegate {
         print("Did sign in with Google: \(String(describing: user))")
         
         DatabaseManager.shared.canCreateNewUser(with: email) { result in
-            switch result {
+            switch result { 
             case .success:
                 DatabaseManager.shared.insertUser(
                     with:
