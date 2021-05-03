@@ -18,6 +18,7 @@ final class AuthManager {
     enum AuthError: Error {
         case creatingUserError
         case signingInUserError
+        case signingInWithCredentialError
     }
     
     // MARK: - Public
@@ -64,8 +65,6 @@ final class AuthManager {
         }
     }
     
-    
-    
     public func signIn(
         with email: String,
         password: String,
@@ -90,7 +89,24 @@ final class AuthManager {
         }
     }
     
-    
+    public func signIn(
+        with credential: AuthCredential,
+        completion: @escaping (Result<AuthDataResult?, Error>) -> Void
+    ) {
+        auth.signIn(with: credential) { result, error in
+            guard result != nil, error == nil else {
+                if let error = error {
+                    completion(.failure(error))
+                }
+                else {
+                    completion(.failure(AuthError.signingInWithCredentialError))
+                }
+                return
+            }
+            
+            completion(.success(result))
+        }
+    }
     
     
     public func signOut() {

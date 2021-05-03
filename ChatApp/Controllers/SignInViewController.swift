@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FBSDKLoginKit
 
 class SignInViewController: UIViewController {
     
@@ -31,19 +32,25 @@ class SignInViewController: UIViewController {
     private let signInButton = AuthButton(type: .signIn, title: nil)
     
     private let signUpButton = AuthButton(type: .signUp, title: nil)
+    
+    private let facebookLoginButton: FBLoginButton = {
+        let button = FBLoginButton()
+        button.permissions = ["email", "public_profile"]
+        return button
+    }()
 
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Sign In"
         view.backgroundColor = .systemBackground
         configureNavigationBar()
         addSubviews()
         addButtonActions()
         emailField.delegate = self
         passwordField.delegate = self
-    }
+        facebookLoginButton.delegate = self
+        }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -51,14 +58,14 @@ class SignInViewController: UIViewController {
         let imageSize = view.width/3
         imageView.frame = CGRect(
             x: (view.width-imageSize)/2,
-            y: view.top,
+            y: view.top-40,
             width: imageSize,
             height: imageSize
         )
         
         emailField.frame = CGRect(
             x: 20,
-            y: imageView.bottom + 10,
+            y: imageView.bottom,
             width: view.width - 40,
             height: 50
         )
@@ -83,6 +90,13 @@ class SignInViewController: UIViewController {
             width: view.width-40,
             height: 50
         )
+        
+        facebookLoginButton.frame = CGRect(
+            x: 20,
+            y: signUpButton.bottom + 30,
+            width: view.width-40,
+            height: 50
+        )
     }
     
     // MARK: - Methods
@@ -94,6 +108,8 @@ class SignInViewController: UIViewController {
         scrollView.addSubview(passwordField)
         scrollView.addSubview(signInButton)
         scrollView.addSubview(signUpButton)
+        scrollView.addSubview(facebookLoginButton)
+
     }
     
 
@@ -187,4 +203,84 @@ extension SignInViewController: UITextFieldDelegate {
         }
         return true
     }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension SignInViewController: LoginButtonDelegate {
+    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        guard let token = result?.token?.tokenString else {
+            print("User failed to log in with Facebook")
+            return
+        }
+        
+        let facebookRequest = FBSDKCoreKit.GraphRequest(
+            graphPath: "me",
+            parameters: ["fields": "email, name"],
+            tokenString: token,
+            version: nil,
+            httpMethod: .get
+        )
+        
+        facebookRequest.start { _, result, error in
+            guard let result = result as? [String: Any],
+                  error == nil else {
+                print("Failed to make facebook graph request")
+                return
+            }
+            
+            guard let username = result["name"] as? String,
+                  let email = result["email"] as? String else {
+                print("Failed to get email and username from FB result")
+                return
+            }
+            let nameComponents = username.components(separatedBy: " ")
+            guard nameComponents.count == 2 else {
+                return
+            }
+            let firstName = nameComponents[0]
+            let lastName = nameComponents[1]
+            
+            DatabaseManager.shared.canCreateNewUser(with: email) { result in
+                switch result {
+                case .success:
+                    DatabaseManager.shared.insertUser(
+                        with: ChatAppUser(
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email)) { result in
+                        switch result {
+                        case .success:
+                            print("\(result )")
+                            let credential = FacebookAuthProvider.credential(withAccessToken: token)
+                            
+                            AuthManager.shared.signIn(with: credential) { [weak self] result in
+                                switch result {
+                                case .failure(let error):
+                                    print("Error with signing in with Facebook Credential \(error.localizedDescription)")
+                                case .success:
+                                    print("Successfully signed in with Facebook Credential")
+                                    self?.dismiss(animated: true, completion: nil)
+                                    let vc = TabBarViewController()
+                                    vc.modalPresentationStyle = .fullScreen
+                                    self?.present(vc, animated: true, completion: nil)
+                                    
+                                }
+                            }
+                        case .failure(let error):
+                            print("error inserting user from signinVC with FB\(error)")
+                        }
+                    }
+                case .failure(let error):
+                    print("failed to create new user \(error)")
+                }
+            }
+        }
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+        
+    }
+    
+    
 }
