@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseAuth
 import FBSDKLoginKit
+import GoogleSignIn
 
 final class AuthManager {
     static let shared = AuthManager()
@@ -113,6 +114,9 @@ final class AuthManager {
     public func signOut() {
         // Log Out FB
         FBSDKLoginKit.LoginManager().logOut()
+        
+        // Log Out Google
+        GIDSignIn.sharedInstance()?.signOut()
         
         do {
             try auth.signOut()

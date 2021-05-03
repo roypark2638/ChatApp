@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
+import GoogleSignIn
 
 class SignInViewController: UIViewController {
     
@@ -38,15 +39,35 @@ class SignInViewController: UIViewController {
         button.permissions = ["email", "public_profile"]
         return button
     }()
+    
+    private let googleLoginButton = GIDSignInButton()
+    
+    private var loginObserver: NSObjectProtocol?
 
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        
+        loginObserver = NotificationCenter.default.addObserver(
+            forName: .didLogInNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+        }
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance()?.presentingViewController = self
+        
         configureNavigationBar()
         addSubviews()
         addButtonActions()
+        
         emailField.delegate = self
         passwordField.delegate = self
         facebookLoginButton.delegate = self
@@ -97,6 +118,14 @@ class SignInViewController: UIViewController {
             width: view.width-40,
             height: 50
         )
+        
+        googleLoginButton.frame = CGRect(
+            x: 20,
+            y: facebookLoginButton.bottom + 16,
+            width: view.width-40,
+            height: 50
+        )
+        
     }
     
     // MARK: - Methods
@@ -109,9 +138,14 @@ class SignInViewController: UIViewController {
         scrollView.addSubview(signInButton)
         scrollView.addSubview(signUpButton)
         scrollView.addSubview(facebookLoginButton)
-
+        scrollView.addSubview(googleLoginButton)
     }
     
+    deinit {
+        if let observer = loginObserver {
+            NotificationCenter.default.removeObserver(loginObserver)
+        }
+    }
 
     private func configureNavigationBar() {
 
@@ -283,4 +317,77 @@ extension SignInViewController: LoginButtonDelegate {
     }
     
     
+}
+
+// MARK: - GIDSignInDelegate
+
+extension SignInViewController: GIDSignInDelegate {
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        guard error == nil else {
+            if let error = error {
+                print("failed to sign in with Google: \(error.localizedDescription)")
+            }
+            return
+        }
+        
+        guard let email = user.profile.email,
+              let firstName = user.profile.givenName,
+              let lastName = user.profile.familyName
+              else {
+            print("google one of the user info doesn't exist")
+            return
+        }
+        
+        print("Did sign in with Google: \(String(describing: user))")
+        
+        DatabaseManager.shared.canCreateNewUser(with: email) { result in
+            switch result {
+            case .success:
+                DatabaseManager.shared.insertUser(
+                    with:
+                        ChatAppUser(
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email)) { result in
+                    switch result {
+                    
+                    case .success:
+                        guard let authentication = user.authentication else {
+                            print("Missing auth object off of google user")
+                            return
+                        }
+                        let credential = GoogleAuthProvider.credential(
+                            withIDToken: authentication.idToken,
+                            accessToken: authentication.accessToken
+                        )
+                        
+                        AuthManager.shared.signIn(
+                            with: credential) { [weak self] result in
+                            switch result {
+                            case .success:
+                                print("\nsign in with Google credential successfully")
+                                let vc = TabBarViewController()
+                                vc.modalPresentationStyle = .fullScreen
+                                self?.present(vc, animated: true)
+                            
+                            case .failure(let error):
+                                print("\nfailed to sign in with Google credential error: \(error)")
+                            }
+                        }
+                    case .failure(let error):
+                        print("seems like the same email exists \(error.localizedDescription)")
+                    }
+                }
+            case .failure(let error):
+                print("seems like the same email exists \(error.localizedDescription)")
+            }
+        }
+        
+
+
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+        print("Google user got disconnected")
+    }
 }
