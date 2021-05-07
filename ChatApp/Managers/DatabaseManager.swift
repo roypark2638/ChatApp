@@ -20,8 +20,9 @@ final class DatabaseManager {
 
 extension DatabaseManager {
     
-    enum DatabaseError: Error {
+    public enum DatabaseError: Error {
         case emailExistInDatabase
+        case failedToInsertUser
     }
     
 
@@ -65,14 +66,22 @@ extension DatabaseManager {
     /// - Parameter user: ChatAppUser
     public func insertUser(
         with user: ChatAppUser,
-        completion: @escaping (Result<String, Error>) -> Void
+        completion: @escaping (Bool) -> Void
     ) {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
             "last_name": user.lastName
-        ])
+        ], withCompletionBlock: { error, _ in
+            guard error == nil else {
+                print("failed to write to database")
+                completion(false)
+                return
+            }
+            
+            
+        })
         print("Inserted the user into firebase successfully")
-        completion(.success(user.email))
+        completion(true)
     }
 }
 
