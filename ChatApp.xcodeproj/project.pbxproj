@@ -28,6 +28,7 @@
 		97A0561F263A0832006BEE11 /* ChatAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A0561E263A0832006BEE11 /* ChatAppUser.swift */; };
 		97A05623263AA8BE006BEE11 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A05622263AA8BE006BEE11 /* TabBarViewController.swift */; };
 		97A056252640C2E2006BEE11 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A056242640C2E2006BEE11 /* ChatViewController.swift */; };
+		97DBBB1C2644DFCA0070A7FE /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DBBB1B2644DFCA0070A7FE /* StorageManager.swift */; };
 		D247C85C6A0C353D0B43A9B4 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E673879123AAD0F4E619411 /* Pods_ChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		97A0561E263A0832006BEE11 /* ChatAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAppUser.swift; sourceTree = "<group>"; };
 		97A05622263AA8BE006BEE11 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		97A056242640C2E2006BEE11 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		97DBBB1B2644DFCA0070A7FE /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		A780B6564585585EAE49E9B7 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,6 +172,7 @@
 			children = (
 				97A0561A2639FFCC006BEE11 /* AuthManager.swift */,
 				97A0561C263A05C7006BEE11 /* DatabaseManager.swift */,
+				97DBBB1B2644DFCA0070A7FE /* StorageManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				97A05623263AA8BE006BEE11 /* TabBarViewController.swift in Sources */,
 				97A05606263934D1006BEE11 /* SignInViewController.swift in Sources */,
 				97A05616263941A1006BEE11 /* AuthButton.swift in Sources */,
+				97DBBB1C2644DFCA0070A7FE /* StorageManager.swift in Sources */,
 				97A05608263934D8006BEE11 /* RegisterViewController.swift in Sources */,
 				97A0561B2639FFCC006BEE11 /* AuthManager.swift in Sources */,
 				97A0560E263934FE006BEE11 /* NewConversationViewController.swift in Sources */,

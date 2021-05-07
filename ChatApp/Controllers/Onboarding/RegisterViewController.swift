@@ -246,7 +246,7 @@ class RegisterViewController: UIViewController {
         guard let (email, firstName, lastName, password) = validateUserInputFields() else {
             return
         }
-        
+        let chatUser = ChatAppUser(firstName: firstName, lastName: lastName, email: email)
         // Firebase register and log in
         spinner.show(in: scrollView)
         
@@ -265,6 +265,23 @@ class RegisterViewController: UIViewController {
                 
                 switch result {
                 case .success:
+                    guard let image = strongSelf.imageView.image,
+                          let data = image.pngData() else {
+                        return
+                    }
+                    
+                    let filename = chatUser.profilePictureFileName
+                    StorageManager.shared.uploadProfilePicture(with: data,
+                                                               fileName: filename
+                    ) { result in
+                        switch result {
+                        case .success(let stringURL):
+                            UserDefaults.standard.set(stringURL, forKey: "profile_picture_url")
+                            print(stringURL)
+                        case .failure(let error):
+                            print("StorageManager error: \(error)")
+                        }
+                    }
                     print("\n successfully created user!!!!\n\n")
                     strongSelf.dismiss(animated: true, completion: nil)
                     

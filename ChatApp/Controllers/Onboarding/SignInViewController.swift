@@ -283,18 +283,15 @@ extension SignInViewController: LoginButtonDelegate {
             }
             let firstName = nameComponents[0]
             let lastName = nameComponents[1]
-            
+            let chatUser = ChatAppUser(firstName: firstName,
+                                       lastName: lastName,
+                                       email: email)
             DatabaseManager.shared.canCreateNewUser(with: email) { result in
                 switch result {
                 case .success:
                     DatabaseManager.shared.insertUser(
-                        with: ChatAppUser(
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email)) { result in
-                        switch result {
-                        case .success:
-                            print("\(result )")
+                        with: chatUser) { success in
+                        if success {
                             let credential = FacebookAuthProvider.credential(withAccessToken: token)
                             
                             AuthManager.shared.signIn(with: credential) { [weak self] result in
@@ -310,8 +307,9 @@ extension SignInViewController: LoginButtonDelegate {
                                     
                                 }
                             }
-                        case .failure(let error):
-                            print("error inserting user from signinVC with FB\(error)")
+                        }
+                        else {
+                            print("error inserting user from signinVC with Facebook")
                         }
                     }
                 case .failure(let error):
@@ -352,15 +350,11 @@ extension SignInViewController: GIDSignInDelegate {
         DatabaseManager.shared.canCreateNewUser(with: email) { result in
             switch result { 
             case .success:
-                DatabaseManager.shared.insertUser(
-                    with:
-                        ChatAppUser(
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email)) { result in
-                    switch result {
-                    
-                    case .success:
+                let chatUser = ChatAppUser(firstName: firstName,
+                                           lastName: lastName,
+                                           email: email)
+                DatabaseManager.shared.insertUser(with:chatUser) { success in
+                    if success {
                         guard let authentication = user.authentication else {
                             print("Missing auth object off of google user")
                             return
@@ -378,22 +372,21 @@ extension SignInViewController: GIDSignInDelegate {
                                 let vc = TabBarViewController()
                                 vc.modalPresentationStyle = .fullScreen
                                 self?.present(vc, animated: true)
-                            
+                                
                             case .failure(let error):
                                 print("\nfailed to sign in with Google credential error: \(error)")
                             }
                         }
-                    case .failure(let error):
+                    }
+                    else {
                         print("seems like the same email exists \(error.localizedDescription)")
                     }
+                    
                 }
             case .failure(let error):
                 print("seems like the same email exists \(error.localizedDescription)")
             }
         }
-        
-
-
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {

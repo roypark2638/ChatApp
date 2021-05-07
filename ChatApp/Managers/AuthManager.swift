@@ -54,11 +54,21 @@ final class AuthManager {
                     return
                 }
                 print("you can create with this user info")
-                
-                DatabaseManager.shared.insertUser(with: ChatAppUser(
-                                                    firstName: firstName,
-                                                    lastName: lastName,
-                                                    email: email), completion: completion)
+                let chatUser = ChatAppUser(firstName: firstName,
+                                           lastName: lastName,
+                                           email: email)
+                DatabaseManager.shared.insertUser(with: chatUser, completion: { success in
+                    if success {
+                        print("Success to insert user from AuthManager completion")
+                        completion(.success(email))
+                        return
+                    }
+                    else {
+                        print("Failed to insert user from AuthManager completion")
+                        completion(.failure(AuthError.creatingUserError))
+                        return
+                    }
+                })
                 
             }
             
